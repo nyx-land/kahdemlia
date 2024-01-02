@@ -1,6 +1,8 @@
-{:paths ["src/kahdemlia" "test/kahdemlia/test"]
+{:paths ["src" "test/kahdemlia/test"]
  :deps {org.clojure/clojure {:mvn/version "1.11.1"}
         org.clojure/clojurescript {:mvn/version "1.11.54"}
+        org.clojure/tools.logging {:mvn/version "1.2.4"}
+        org.clojure/core.async {:mvn/version "1.6.681"}
         manifold-cljs/manifold-cljs {:mvn/version "0.1.7-1"}
         manifold/manifold {:mvn/version "0.4.1"}
         com.taoensso/timbre {:mvn/version "6.3.1"}}}

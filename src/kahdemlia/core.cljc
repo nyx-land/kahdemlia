@@ -1,18 +1,22 @@
 (ns kahdemlia.core
   #?(:clj
      (:require
-      [clojure.spec :as spec]
+      [clojure.spec.alpha :as spec]
       ;; [clojure.core.async :refer [chan put! <!]]
       ;; [clojure.core.async.impl.protocols :refer [Channel]]
-      [manifold.stream :refer [Sinkable stream put! <!]]
+      [manifold.stream.core :refer [Sinkable]]
+      [manifold.stream :refer [stream put!]]
+      [manifold.go-off :refer [<!]]
       [taoensso.timbre :as log]
       [kahdemlia.encoding :as enc])
      :cljs
      (:require
-      [cljs.spec :as spec]
+      [cljs.spec.alpha :as spec]
       ;; [cljs.core.async :refer [chan put! <!]]
       ;; [cljs.core.async.impl.protocols :refer [Channel]]
-      [manifold-cljs.stream :refer [Sinkable stream put! <!]]
+      [manifold-cljs.stream.core :refer [Sinkable]]
+      [manifold-cljs.stream :refer [stream put! <!]]
+      [manifold-cljs.go-off :refer [<!]]
       [taoensso.timbre :as log]
       [kahdemlia.encoding :as enc])))
 
