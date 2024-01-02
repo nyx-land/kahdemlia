@@ -1,18 +1,20 @@
 (ns kahdemlia.core
   #?(:clj
      (:require
-       [clojure.spec :as spec]
-       [clojure.core.async :refer [chan put! <!]]
-       [clojure.core.async.impl.protocols :refer [Channel]]
-       [taoensso.timbre :as log]
-       [kahdemlia.encoding :as enc])
+      [clojure.spec :as spec]
+      ;; [clojure.core.async :refer [chan put! <!]]
+      ;; [clojure.core.async.impl.protocols :refer [Channel]]
+      [manifold.stream :refer [Sinkable stream put! <!]]
+      [taoensso.timbre :as log]
+      [kahdemlia.encoding :as enc])
      :cljs
      (:require
-       [cljs.spec :as spec]
-       [cljs.core.async :refer [chan put! <!]]
-       [cljs.core.async.impl.protocols :refer [Channel]]
-       [taoensso.timbre :as log]
-       [kahdemlia.encoding :as enc])))
+      [cljs.spec :as spec]
+      ;; [cljs.core.async :refer [chan put! <!]]
+      ;; [cljs.core.async.impl.protocols :refer [Channel]]
+      [manifold-cljs.stream :refer [Sinkable stream put! <!]]
+      [taoensso.timbre :as log]
+      [kahdemlia.encoding :as enc])))
 
 ;;; System-wide parameters ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -81,13 +83,13 @@
 
 ;;; RPCs ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn- chan? [c]
-  (satisfies? Channel c))
+(defn- stream? [s]
+  (satisfies? Sinkable s))
 
 (spec/def ::msg (spec/and seq? (comp keyword? first)))
 
-(spec/def ::network-out-ch chan?)
-(spec/def ::found-ch chan?)
+(spec/def ::network-out-ch stream?)
+(spec/def ::found-ch stream?)
 (spec/def ::network-fn fn?)
 (spec/def ::find-fn fn?)
 (spec/def ::ip string?)
@@ -175,8 +177,8 @@
     :post [(spec/valid? ::node %)]}
    (as-> {:id             id
           :state          (atom {:buckets [] :storage storage})
-          :network-out-ch (chan)
-          :found-ch       (chan)} node
+          :network-out-ch (stream)
+          :found-ch       (stream)} node
          (assoc node :network-fn (partial on-network node))
          (assoc node :find-fn (partial on-request node))
          (assoc node :store-fn (partial on-store node)))))
