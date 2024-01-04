@@ -4,8 +4,7 @@
       [clojure.spec.alpha :as spec]
       ;; [clojure.core.async :refer [chan put! <!]]
       ;; [clojure.core.async.impl.protocols :refer [Channel]]
-      [manifold.stream.core :refer [Sinkable]]
-      [manifold.stream :refer [stream put!]]
+      [manifold.stream :refer [stream put! sinkable?]]
       [manifold.go-off :refer [<!]]
       [taoensso.timbre :as log]
       [kahdemlia.encoding :as enc])
@@ -14,8 +13,7 @@
       [cljs.spec.alpha :as spec]
       ;; [cljs.core.async :refer [chan put! <!]]
       ;; [cljs.core.async.impl.protocols :refer [Channel]]
-      [manifold-cljs.stream.core :refer [Sinkable]]
-      [manifold-cljs.stream :refer [stream put! <!]]
+      [manifold-cljs.stream :refer [stream put! <! sinkable?]]
       [manifold-cljs.go-off :refer [<!]]
       [taoensso.timbre :as log]
       [kahdemlia.encoding :as enc])))
@@ -88,7 +86,7 @@
 ;;; RPCs ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn- stream? [s]
-  (satisfies? Sinkable s))
+  (sinkable? s))
 
 (spec/def ::msg (spec/and seq? (comp keyword? first)))
 
@@ -183,6 +181,6 @@
           :state          (atom {:buckets [] :storage storage})
           :network-out-ch (stream)
           :found-ch       (stream)} node
-         (assoc node :network-fn (partial on-network node))
-         (assoc node :find-fn (partial on-request node))
-         (assoc node :store-fn (partial on-store node)))))
+     (assoc node :network-fn (partial on-network node))
+     (assoc node :find-fn (partial on-request node))
+     (assoc node :store-fn (partial on-store node)))))
